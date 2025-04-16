@@ -1,0 +1,34 @@
+{
+    "name" : "British royal family",
+    "categories" : {
+        "person" : ["Charles", "William", "Harry", "Georges", "Diana", "Kate", 
+"Charlotte"]
+    },
+    "formalContexts" : {
+        "Person" : {
+            "domain" : "person",
+            "attributes" : ["male", "female"],
+            "incidence": {
+                "Charles" : ["male"],
+                "William" : ["male"],
+                "Harry" : ["male"],
+                "Georges" : ["male"],
+                "Diana": ["female"],
+                "Kate": ["female"],
+                "Charlotte": ["female"]
+            }
+        }
+    },
+    "relationalContexts" : {
+        "parent" : {
+            "domain" : "person",
+            "range": "person",
+            "incidence": {
+                "William" : ["Charles", "Diana"],
+                "Harry" : ["Charles", "Diana"],
+                "Georges" : ["William", "Kate"],
+                "Charlotte": ["William", "Kate"]
+            }
+        }
+    }
+}
