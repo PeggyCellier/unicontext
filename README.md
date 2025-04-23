@@ -4,7 +4,7 @@
 
 Contexts are used in most SmartFCA algorithms. They are defined in FCA theory by a set of objects, a set of attributes, and an incidence relationship between the set of objects and the set of attributes. Today, this definition has been extended to an incidence relationship between objects and themselves. This definition is mainly used by the relational extensions of FCA, e.g. Graph-FCA and RCA.
 
-A formal context K := (O,A,I) consists of a set of objects O (a category), a set of attributes A and an incidence relation I between G and M. A relational context $R := (O_1,.. , O_n, I)$ consists of a family of categories $O_1$,.. , $O_n$ and a incidence relation $I \subset O_1 * .. * O_n$.
+A formal context $K := (O,A,I)$ consists of a set of objects O (a category), a set of attributes A and an incidence relation I between $O$ and $A$. A relational context $R := (O_1,.. , O_n, I)$ consists of a family of categories $O_1$,.. , $O_n$ and a incidence relation $I \subset O_1 * .. * O_n$.
 
 In a UniContext, sets of objects depending of a formal or relational context are defined at the root of the JSON object, under the $categories$ field. Categories may or may not be common to multiples formal or relational contexts. Attributes depending of a formal context are defined within the formal context. Incidence relation depending of a formal or relational context are defined within the formal or relational context.
 
