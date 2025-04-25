@@ -4,7 +4,7 @@
 
 Contexts are used in most SmartFCA algorithms. They are defined in FCA theory by a set of objects, a set of attributes, and an incidence relationship between the set of objects and the set of attributes. Today, this definition has been extended to an incidence relationship between objects and themselves. This definition is mainly used by the relational extensions of FCA, e.g. Graph-FCA and RCA.
 
-A formal context $K := (O,A,I)$ consists of a set of objects O (a category), a set of attributes A and an incidence relation I between $O$ and $A$. A relational context $R := (O_1,.. , O_n, I)$ consists of a family of categories $O_1$,.. , $O_n$ and a incidence relation $I \subset O_1 * .. * O_n$.
+A formal context $K := (O,A,I)$ consists of a set of objects O (a category), a set of attributes A and an incidence relation I between $O$ and $A$. A relational context $R := (O_1,.. , O_n, I)$ consists of a family of categories $O_1$,.. , $O_n$ and a incidence relation $I \subset O_1 \times .. \times O_n$.
 
 In a UniContext, sets of objects depending of a formal or relational context are defined at the root of the JSON object, under the $categories$ field. Categories may or may not be common to multiples formal or relational contexts. Attributes depending of a formal context are defined within the formal context. Incidence relation depending of a formal or relational context are defined within the formal or relational context.
 
@@ -27,13 +27,13 @@ An UniContext file is a file containing a JSON object with a defined list of key
     <ContextObj> ::= {
         name : <ContextName>
         description : <ContextDescription>, (optionnal)
-        categories : { <categoryId> : <categoryObj>, ..},
+        categories : { <CategoryId> : <categoryObj>, ..},
         formalContexts : { 
-            <formalContextId> : <formalContextObj>, 
+            <FormalContextId> : <formalContextObj>, 
             ... 
         },
         relationalContexts : { 
-            <relId> : <relationalContextObj>, 
+            <RelationalContextId> : <relationalContextObj>, 
             ...
         }
     }
@@ -43,7 +43,7 @@ The $ContextObj$ is the root object of a UniContext. It contains its name, its o
     <categoryObj> ::= [obj_1, obj_2,...]
 
     <formalContextObj> ::= {
-        domain : <categoryId>,
+        domain : <CategoryId>,
         attributes : [attribute_1, attribute_2, ...],
         incidence : { 
             obj_1 : <incidence_1>, 
@@ -53,8 +53,8 @@ The $ContextObj$ is the root object of a UniContext. It contains its name, its o
     }
 
     <relationalContextObj> ::= {
-        domain : <categoryId>,
-        range : <categoryId>,
+        domain : <CategoryId>,
+        range : <CategoryId>,
         incidence : { 
             obj_1 : <incidenceObj_1>,
             obj_2 : <incidenceObj_2>,
@@ -62,8 +62,8 @@ The $ContextObj$ is the root object of a UniContext. It contains its name, its o
         }
     }
     | {
-        domain : <categoryId>,
-        range : [<categoryId_1>, <categoryId_2>, ...],
+        domain : <CategoryId>,
+        range : [<CategoryId_1>, <CategoryId_2>, ...],
         incidence : {
             obj_1 : <incidenceMultiObj_1>,
             obj_2 : <incidenceMultiObj_2>
@@ -82,13 +82,13 @@ A $relationalContextObj$ defines an n-ary relational context $R := (O_1,..,O_n,I
 The incidence relation $I$ of a $relationalContextObj$ of arity n is defined as\\ followed :
 
 - if $n=2$, the incidence relation is the dictionary indexed by value $obj_1 \in O_1$ of the domain of $I$ and valued by the list of every $obj^i_2$ such as $(obj_1, obj^i_2) \in I$
-- if $n \geq 3$, the incidence relation is the dictionary indexed by value $obj_1 \in O_1$ of the domain of $I$ and valued by the list of list $[obj^i_2,.. ,obj^i_n]$ such as $(obj^i_1, .., obj^i_n) \in I$
+- if $n \geq 3$, the incidence relation is the dictionary indexed by value $obj_1 \in O_1$ of the domain of $I$ and valued by the list of list $[obj^i_2,.. ,obj^i_n]$ such as $(obj^i_1, obj^i_2 .., obj^i_n) \in I$
 
 ## Examples
 
 ### British Royal Family
 
-Here is an UniContext describing the British royal family. The context consists of 1- a category $person$, which is the set of members of the royal family, 2- an incidence relation $Person$ between the category $person$ and the set of attributes $\{"male", "female", "child", "adult", "alive"\}$ forming a formal context, and 3- an incidence relation $parent$ between the category $person$ and itself, forming a relational context. 
+Here is an UniContext describing the British royal family. The context consists of (1-) a category $person$, which is the set of members of the royal family, (2-) an incidence relation $Person$ between the category $person$ and the set of attributes $\{"male", "female", "child", "adult", "alive"\}$ forming a formal context, and (3-) an incidence relation $parent$ between the category $person$ and itself, forming a relational context. 
 
     {
         "name" : "British royal family",
