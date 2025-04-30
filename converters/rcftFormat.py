@@ -1,4 +1,4 @@
-def parse_relational_context(lines):
+def parse_context(lines):
     headers = lines[0].split('|')[1:]
     headers = [header.strip() for header in headers]
 
@@ -15,7 +15,7 @@ data = """
 FormalContext person
 algo fca
 |  |male|female|
-|Jean|x     |      |
+|Jean|x     |  |
 |Julie|      |x     |
 |Julien|x     |      |
 |Jeanne|      |x     |
@@ -41,10 +41,10 @@ def read_data(data):
         lines = entry.strip().split('\n')
         fst = lines[0].strip().split(' ')
         if fst[0] == "FormalContext":
-            relations=parse_relational_context(lines[2:])
+            relations=parse_context(lines[2:])
             print(relations)
         elif fst[0] == "RelationalContext":
-            relations=parse_relational_context(lines[4:])
+            relations=parse_context(lines[4:])
             print(relations)
         else:
             raise "unknown context"
