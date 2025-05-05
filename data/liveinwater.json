@@ -1,0 +1,84 @@
+{
+    "name": "context",
+    "categories": {
+      "objects": [
+        "fish leech",
+        "bream",
+        "frog",
+        "dog",
+        "water weeds",
+        "reed",
+        "bean",
+        "corn"
+      ]
+    },
+    "formalContexts": {
+      "formalContext": {
+        "domain": "objects",
+        "attributes": [
+          "needs water to live",
+          "lives in water",
+          "lives on land",
+          "needs chlorophyll",
+          "dicotyledon",
+          "monocotyledon",
+          "can move",
+          "has limbs",
+          "breast feeds"
+        ],
+        "incidence": {
+          "fish leech": [
+            "needs water to live",
+            "lives in water",
+            "can move"
+          ],
+          "bream": [
+            "needs water to live",
+            "lives in water",
+            "can move",
+            "has limbs"
+          ],
+          "frog": [
+            "needs water to live",
+            "lives in water",
+            "lives on land",
+            "can move",
+            "has limbs"
+          ],
+          "dog": [
+            "needs water to live",
+            "lives on land",
+            "can move",
+            "has limbs",
+            "breast feeds"
+          ],
+          "water weeds": [
+            "needs water to live",
+            "lives in water",
+            "needs chlorophyll",
+            "monocotyledon"
+          ],
+          "reed": [
+            "needs water to live",
+            "lives in water",
+            "lives on land",
+            "needs chlorophyll",
+            "monocotyledon"
+          ],
+          "bean": [
+            "needs water to live",
+            "lives on land",
+            "needs chlorophyll",
+            "dicotyledon"
+          ],
+          "corn": [
+            "needs water to live",
+            "lives on land",
+            "needs chlorophyll",
+            "monocotyledon"
+          ]
+        }
+      }
+    },
+    "relationalContexts": {}
+}
