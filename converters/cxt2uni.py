@@ -8,69 +8,45 @@ def parse_input(input_data):
         raise ValueError("L'entrée doit commencer par la lettre 'B'.")
 
     # Lire le nombre d'objets et le nombre d'attributs
-    num_objects = int(lines[1])
-    num_attributes = int(lines[2])
+    num_objects = int(lines[2])
+    num_attributes = int(lines[3])
 
     # Lire la liste des objets
-    objects = lines[3:3 + num_objects]
+    objects = lines[5:5 + num_objects]
 
     # Lire la liste des attributs
-    attributes = lines[3 + num_objects:3 + num_objects + num_attributes]
+    attributes = lines[5 + num_objects:5 + num_objects + num_attributes]
 
     # Lire le tableau des relations entre objets et attributs
-    relations = lines[3 + num_objects + num_attributes:]
+    relations = lines[5 + num_objects + num_attributes:]
 
     # Convertir les relations en une matrice binaire
     relation_matrix = [list(line.replace('.', '0').replace('X', '1')) for line in relations]
 
-    return {
-        'objects': objects,
-        'attributes': attributes,
-        'relation_matrix': relation_matrix
-    }
+    # Créer la liste des attributs par objet
+    incidence1 = []
+    for i in range(num_objects):
+        obj_attributes = [attributes[j] for j in range(num_attributes) if relation_matrix[i][j] == '1']
+        incidence1.append(obj_attributes)
 
-# Exemple d'utilisation
-input_data = """
-B
-8
-9
-fish leech
-bream
-frog
-dog
-water weeds
-reed
-bean
-corn
-needs water to live
-lives in water
-lives on land
-needs chlorophyll
-dicotyledon
-monocotyledon
-can move
-has limbs
-breast feeds
-XX....X..
-XX....XX.
-XXX...XX.
-X.X...XXX
-XX.X.X...
-XXXX.X...
-X.XXX....
-X.XX.X...
-"""
+    # classe le resultat dans un dictionnaire indexé par objet
+    incidence2 = {}
+    for i, obj_attributes in enumerate(incidence1):
+        incidence2[objects[i]] = obj_attributes
 
-parsed_data = parse_input(input_data)
+    cat= unicontext.Categories(root={"objects": objects})
+    formalContext = unicontext.FormalContext(domain="objects", attributes=attributes, incidence=incidence2)
+    result = unicontext.DataModel(name="context", categories=cat, formalContexts={"formalContext":formalContext})
 
-result = unicontext.DataModel()
-unicontext.printUniContext(result)
+    return result
 
 
+def main(filepath):
+    with open(filepath, 'r') as file:
+        parsed_data = parse_input(file.read())
+        unicontext.printJson(parsed_data)
 
 
-print("Objets:", parsed_data['objects'])
-print("Attributs:", parsed_data['attributes'])
-print("Matrice des relations:")
-for row in parsed_data['relation_matrix']:
-    print(row)
+if __name__ == "__main__":
+    filepath = 'data/liveinwater.cxt'
+    main(filepath)

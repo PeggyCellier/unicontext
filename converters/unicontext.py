@@ -47,3 +47,6 @@ def printUniContext(rootcontext):
         print(f"  Domain: {context.domain}")
         print(f"  Range: {context.range}")
         print(f"  Incidence: {context.incidence}")
+
+def printJson(model):
+    print(model.model_dump_json(indent=2))
