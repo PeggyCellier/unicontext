@@ -208,3 +208,13 @@ Here is an UniContext describing Researchers, their job, who they have worked wi
             }
         }
     }
+
+## Tests
+
+To convert a .cxt file to the Unicontext format, use the command line, as an example :
+
+    python converters/cxt2uni.py data/liveinwater.cxt
+
+To convert a Unicontext file to the .cxt format, use the command line, as an example :
+
+    python converters/uni2cxt.py data/liveinwater.json
