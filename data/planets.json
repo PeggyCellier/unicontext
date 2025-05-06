@@ -1,0 +1,78 @@
+{
+  "name": "context",
+  "categories": {
+    "objects": [
+      "Merkur",
+      "Venus",
+      "Earth",
+      "Mars",
+      "Jupiter",
+      "Saturn",
+      "Uranus",
+      "Neptune",
+      "Pluto"
+    ]
+  },
+  "formalContexts": {
+    "formalContext": {
+      "domain": "objects",
+      "attributes": [
+        "Small",
+        "Medium",
+        "Large",
+        "Near",
+        "Distant",
+        "Moon",
+        "No moon"
+      ],
+      "incidence": {
+        "Merkur": [
+          "Small",
+          "Near",
+          "No moon"
+        ],
+        "Venus": [
+          "Small",
+          "Near",
+          "No moon"
+        ],
+        "Earth": [
+          "Small",
+          "Near",
+          "Moon"
+        ],
+        "Mars": [
+          "Small",
+          "Near",
+          "Moon"
+        ],
+        "Jupiter": [
+          "Large",
+          "Distant",
+          "Moon"
+        ],
+        "Saturn": [
+          "Large",
+          "Distant",
+          "Moon"
+        ],
+        "Uranus": [
+          "Medium",
+          "Distant",
+          "Moon"
+        ],
+        "Neptune": [
+          "Medium",
+          "Distant",
+          "Moon"
+        ],
+        "Pluto": [
+          "Small",
+          "Distant",
+          "Moon"
+        ]
+      }
+    }
+  },
+  "relationalContexts": {}
+}
