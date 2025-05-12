@@ -1,0 +1,21 @@
+FormalContext person
+algo fca
+|  |male|female|
+|Jean|x     |  |
+|Julie|      |x     |
+|Julien|x     |      |
+|Jeanne|      |x     |
+|Bob|x     |      |
+|Anne|      |x     |
+
+RelationalContext love
+source person
+target person
+scaling exist 
+|  |Jean|Julie|Julien|Jeanne|Bob|Anne|
+|Jean|  |x |  |  |  |  |
+|Julie|  |  |x |  |  |  |
+|Julien|  |  |  |x |  |  |
+|Jeanne|x |  |  |  |  |  |
+|Bob|  |  |  |  |  |x |
+|Anne|  |  |  |  |x |  |
