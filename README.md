@@ -209,6 +209,10 @@ Here is an UniContext describing Researchers, their job, who they have worked wi
         }
     }
 
+## Install
+
+the scripts need python 3 and the library pydantic to be executed
+
 ## Tests
 
 To convert a .cxt file to the Unicontext format, use the command line, as an example :
