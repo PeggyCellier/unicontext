@@ -1,0 +1,252 @@
+{
+  "name": "context",
+  "categories": {
+    "Person": [
+      "person1",
+      "person2",
+      "person3",
+      "person4",
+      "person5"
+    ],
+    "Place": [
+      "park",
+      "library"
+    ],
+    "Resource": [
+      "ball",
+      "book"
+    ],
+    "Group": [
+      "reading_club",
+      "sport_club"
+    ],
+    "Activity": [
+      "football",
+      "reading"
+    ]
+  },
+  "formalContexts": {
+    "Person": {
+      "domain": "Person",
+      "attributes": [
+        "male",
+        "female",
+        "person"
+      ],
+      "incidence": {
+        "person1": [
+          "female",
+          "person"
+        ],
+        "person2": [
+          "female",
+          "person"
+        ],
+        "person3": [
+          "male",
+          "person"
+        ],
+        "person4": [
+          "male",
+          "person"
+        ],
+        "person5": [
+          "male",
+          "person"
+        ]
+      }
+    },
+    "Place": {
+      "domain": "Place",
+      "attributes": [
+        "public",
+        "private",
+        "place"
+      ],
+      "incidence": {
+        "park": [
+          "public",
+          "place"
+        ],
+        "library": [
+          "private",
+          "place"
+        ]
+      }
+    },
+    "Resource": {
+      "domain": "Resource",
+      "attributes": [
+        "resource",
+        "play",
+        "study"
+      ],
+      "incidence": {
+        "ball": [
+          "resource",
+          "play"
+        ],
+        "book": [
+          "resource",
+          "study"
+        ]
+      }
+    },
+    "Group": {
+      "domain": "Group",
+      "attributes": [
+        "friendly",
+        "academic",
+        "group"
+      ],
+      "incidence": {
+        "reading_club": [
+          "academic",
+          "group"
+        ],
+        "sport_club": [
+          "friendly",
+          "group"
+        ]
+      }
+    },
+    "Activity": {
+      "domain": "Activity",
+      "attributes": [
+        "sport",
+        "cultural",
+        "activity"
+      ],
+      "incidence": {
+        "football": [
+          "sport",
+          "activity"
+        ],
+        "reading": [
+          "cultural",
+          "activity"
+        ]
+      }
+    }
+  },
+  "relationalContexts": {
+    "is_friend_with": {
+      "domain": "Person",
+      "range": "Person",
+      "incidence": {
+        "person1": [
+          "person2"
+        ],
+        "person2": [],
+        "person3": [
+          "person4"
+        ],
+        "person4": [
+          "person5"
+        ],
+        "person5": []
+      }
+    },
+    "is_done_by": {
+      "domain": "Activity",
+      "range": "Group",
+      "incidence": {
+        "football": [
+          "sport_club"
+        ],
+        "reading": [
+          "reading_club"
+        ]
+      }
+    },
+    "practice": {
+      "domain": "Person",
+      "range": "Activity",
+      "incidence": {
+        "person1": [
+          "reading"
+        ],
+        "person2": [
+          "reading"
+        ],
+        "person3": [
+          "football"
+        ],
+        "person4": [
+          "football"
+        ],
+        "person5": [
+          "football"
+        ]
+      }
+    },
+    "lend": {
+      "domain": "Person",
+      "range": "Resource",
+      "incidence": {
+        "person1": [
+          "book"
+        ],
+        "person2": [],
+        "person3": [
+          "ball"
+        ],
+        "person4": [
+          "ball"
+        ],
+        "person5": []
+      }
+    },
+    "coordonate": {
+      "domain": "Person",
+      "range": "Activity",
+      "incidence": {
+        "person1": [],
+        "person2": [
+          "reading"
+        ],
+        "person3": [],
+        "person4": [],
+        "person5": [
+          "football"
+        ]
+      }
+    },
+    "take_place_at": {
+      "domain": "Activity",
+      "range": "Place",
+      "incidence": {
+        "football": [
+          "park"
+        ],
+        "reading": [
+          "library"
+        ]
+      }
+    },
+    "is_lent_to": {
+      "domain": "Resource",
+      "range": "Group",
+      "incidence": {
+        "ball": [
+          "sport_club"
+        ],
+        "book": [
+          "reading_club"
+        ]
+      }
+    },
+    "meet_at": {
+      "domain": "Group",
+      "range": "Place",
+      "incidence": {
+        "reading_club": [
+          "library"
+        ],
+        "sport_club": [
+          "park"
+        ]
+      }
+    }
+  }
+}

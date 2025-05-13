@@ -1,0 +1,108 @@
+FormalContext Person
+algo fca 
+||male |female|person|
+|person1||x|x| 
+|person2||x|x| 
+|person3|x||x| 
+|person4|x||x| 
+|person5|x||x| 
+
+FormalContext Place
+algo fca 
+||public|private|place|
+|park|x||x| 
+|library||x|x| 
+
+FormalContext Resource
+algo fca 
+||resource|play|study|
+|ball|x|x|| 
+|book|x||x| 
+
+FormalContext Group
+algo fca 
+||friendly|academic|group|
+|reading_club||x|x| 
+|sport_club|x||x| 
+
+FormalContext Activity
+algo fca 
+||sport|cultural|activity|
+|football|x||x| 
+|reading||x|x| 
+
+RelationalContext is_friend_with
+source Person
+target Person
+scaling exist
+||person1|person2|person3|person4|person5|
+|person1||x|||| 
+|person2|||||| 
+|person3||||x|| 
+|person4|||||x| 
+|person5|||||| 
+
+RelationalContext is_done_by
+source Activity
+target Group
+scaling exist
+||reading_club|sport_club|
+|football||x| 
+|reading|x|| 
+
+RelationalContext practice
+source Person
+target Activity
+scaling exist
+||football|reading|
+|person1 ||x| 
+|person2 ||x| 
+|person3 |x|| 
+|person4 |x|| 
+|person5 |x|| 
+
+RelationalContext lend
+source Person
+target Resource
+scaling exist
+||book|ball|
+|person1 |x|| 
+|person2 ||| 
+|person3 ||x| 
+|person4 ||x| 
+|person5 ||| 
+
+RelationalContext coordonate
+source Person
+target Activity
+scaling exist
+||football|reading|
+|person1 ||| 
+|person2 ||x| 
+|person3 ||| 
+|person4 ||| 
+|person5 |x|| 
+
+RelationalContext take_place_at
+source Activity
+target Place
+scaling exist
+||park|library|
+|football|x|| 
+|reading||x| 
+
+RelationalContext is_lent_to
+source Resource
+target Group
+scaling exist
+||sport_club|reading_club|
+|ball|x|| 
+|book||x| 
+
+RelationalContext meet_at
+source Group
+target Place
+scaling exist
+||park|library|
+|reading_club||x| 
+|sport_club|x|| 
