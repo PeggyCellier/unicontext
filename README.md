@@ -201,7 +201,7 @@ Here is an UniContext describing Researchers, their job, who they have worked wi
                 "range" : ["place", "paper"],
                 "incidence" : {
                     "Nicolas" : [["Bordeaux", "paperA"]],
-                    "Marine" : [["Bordeaux", "paperA"], ["Lille", "paperB]],
+                    "Marine" : [["Bordeaux", "paperA"], ["Lille", "paperB"]],
                     "Pierre": [["Lille", "paperB"], ["Rennes", "paperC"]],
                     "Tom" : [["Rennes", "paperC"], ["Strasbourg", "paperD"]]
                 }

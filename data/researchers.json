@@ -1,0 +1,52 @@
+{
+    "name": "Researchers",
+    "categories" : {
+        "person": ["Nicolas", "Marine", "Pierre", "Tom"],
+        "places": ["Bordeaux", "Lille", "Strasbourg", "Rennes"],
+        "papers": ["paperA", "paperB", "paperC", "paperD"]
+    },
+    "formalContexts" : {
+        "employment" : {
+            "domain" : "person",
+            "attributes" : ["Phd", "teacher", "researcher", "engineer"],
+            "incidence" : {
+                "Nicolas" : ["engineer"],
+                "Marine" : ["teacher"],
+                "Pierre" : ["researcher", "teacher", "Phd"],
+                "Tom" : ["researcher", "Phd"]
+            }
+        }, 
+        "field" : {
+            "domain" : "paper",
+            "attributes" : ["Machine Learning", "Data Mining", "Linguistics", "Biology"],
+            "incidence" : {
+                "paperA" : ["Machine Learning", "Linguistics"],
+                "paperB" : ["Data Mining", "Biology"],
+                "paperC" : ["Machine Learning", "Biology"],
+                "paperD" : ["Linguistics"]
+            }
+        }
+    },
+    "relationalContexts" : {
+        "hasWorkedWith" : {
+            "domain" : "person",
+            "range" : "person",
+            "incidence" : {
+                "Nicolas" : ["Marine"],
+                "Marine" : ["Nicolas", "Pierre"],
+                "Pierre": ["Marine", "Tom"],
+                "Tom": ["Pierre"]
+            }
+        },
+        "hasWorkedInOn" : {
+            "domain" : "person",
+            "range" : ["place", "paper"],
+            "incidence" : {
+                "Nicolas" : [["Bordeaux", "paperA"]],
+                "Marine" : [["Bordeaux", "paperA"], ["Lille", "paperB"]],
+                "Pierre": [["Lille", "paperB"], ["Rennes", "paperC"]],
+                "Tom" : [["Rennes", "paperC"], ["Strasbourg", "paperD"]]
+            }
+        }
+    }
+}

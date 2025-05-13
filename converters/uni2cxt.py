@@ -34,7 +34,7 @@ def validateModel(model):
             if len(model.relationalContexts.root) == 0:
                 return True
             else :
-                print("no formal context allowed")
+                print("no relational context allowed")
                 return False
         else:
             print("only one formal context allowed")
