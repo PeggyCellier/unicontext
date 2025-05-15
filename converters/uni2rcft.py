@@ -1,6 +1,10 @@
 import sys
 import unicontext as unicontext
 
+class WrappedFC:
+    def __init__(self, name, fc):
+        self.name = name
+        self.fc = fc
 
 def printFormalContext(name, ctx):
     print("FormalContext", name)
@@ -30,19 +34,62 @@ def printRelContext(name, ctx, source, target):
         header+="|"
     print(header)
     for obj in source:
-        rel = ctx.incidence[obj]
-        line = "|" + obj + "|"
-        for t in target:
-            if t in rel:
-                line+= "x|"
-            else:
+        if obj in ctx.incidence.keys():
+            rel = ctx.incidence[obj]
+            line = "|" + obj + "|"
+            for t in target:
+                if t in rel:
+                    line+= "x|"
+                else:
+                    line+= "|"
+            print(line)
+        else:
+            line = "|" + obj + "|"
+            for t in target:
                 line+= "|"
-        print(line)
+            print(line)
 
+
+
+def FormalContextsPerCategory(model):
+    categoryNames = model.categories.root.keys()
+    fcpc = {}
+    for name, fc in model.formalContexts.root.items():
+        domain = fc.domain
+        wfc = WrappedFC(name, fc)
+        if domain in fcpc :
+            fcpc[domain].append(wfc)
+        else:
+            fcpc[domain] = [wfc]
+    for name in categoryNames:
+        if name in fcpc.keys():
+            continue
+        else:
+            fcpc[name] = []
+    return fcpc
 
 def printCtx(model):
-    for name, ctx in model.formalContexts.root.items():
-        printFormalContext(name, ctx)
+    wfcpc = FormalContextsPerCategory(model)
+    for name, wfclist in wfcpc.items():
+        if len(wfclist) == 0:
+            print("empty")
+        elif len(wfclist) == 1:
+            printFormalContext(name, wfclist[0].fc)
+        else:
+            attr=[]
+            incidence = {}
+            for obj in model.categories.root[name]:
+                incidence[obj] = []
+            for wctx in wfclist:
+                def prefix(name):
+                    return wctx.name + "_" + name
+                attr = attr + list(map(prefix, wctx.fc.attributes))
+                for obj in model.categories.root[name]:
+                    for a in wctx.fc.attributes:
+                        if a in wctx.fc.incidence[obj]:
+                            incidence[obj].append(prefix(a))
+            ctx = unicontext.FormalContext(domain=name, attributes=attr, incidence=incidence)
+            printFormalContext(name, ctx)
         print("")
     for name, ctx in model.relationalContexts.root.items():
         printRelContext(name, ctx, model.categories.root[ctx.domain], model.categories.root[ctx.range])
@@ -54,6 +101,7 @@ def validateModel(model):
             print("n-ary relational context with n>=3 not allowed")
             return False
     return True
+
 
 
 def main(filepath):
