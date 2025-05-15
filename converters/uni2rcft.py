@@ -72,7 +72,12 @@ def printCtx(model):
     wfcpc = FormalContextsPerCategory(model)
     for name, wfclist in wfcpc.items():
         if len(wfclist) == 0:
-            print("empty")
+            attr = [name]
+            incidence = {}
+            for obj in model.categories.root[name]:
+                incidence[obj] = [name]
+            ctx = unicontext.FormalContext(domain=name, attributes=attr, incidence=incidence)
+            printFormalContext(name, ctx)
         elif len(wfclist) == 1:
             printFormalContext(name, wfclist[0].fc)
         else:

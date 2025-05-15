@@ -1,0 +1,19 @@
+{
+    "name" : "British royal family",
+    "categories" : {
+        "person" : ["Charles", "William", "Harry", "Georges", "Diana", "Kate", 
+"Charlotte"]
+    },
+    "relationalContexts" : {
+        "parent" : {
+            "domain" : "person",
+            "range": "person",
+            "incidence": {
+                "William" : ["Charles", "Diana"],
+                "Harry" : ["Charles", "Diana"],
+                "Georges" : ["William", "Kate"],
+                "Charlotte": ["William", "Kate"]
+            }
+        }
+    }
+}
