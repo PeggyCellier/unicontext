@@ -1,3 +1,4 @@
+import sys
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
 
@@ -51,41 +52,18 @@ def parse_file(file_content):
 
     return ent
 
-# Exemple d'utilisation avec le fichier de la famille royale britannique
-file_content_family = """
-% British royal family
-:-
-Charles & William & Harry & Georges : [ male ],
-Diana & Kate & Charlotte : [ female ],
-William & Harry : [ parent Charles & Diana ],
-Georges & Charlotte : [ parent William & Kate ].
-"""
+def main(filepath):
+    with open(filepath, 'r') as file:
+        entities = parse_file(file.read())
+        for key, value in entities.root.items():
+            print(key, value)
 
-# Exemple d'utilisation avec le fichier des plats et céréales
-file_content_food = """
-:-
-arancini : [ arancini, dish, hasMainCereal arborioRice ],
-gardiane : [ gardiane, dish, hasMainCereal arborioRice & redRice ],
-khaoManKai : [ khaoManKai, dish, hasMainCereal thaiRice ],
-biryani : [ biryani, dish, hasMainCereal basmatiRice ],
-redRice : [ redRice, cereal, rice, isProducedIn France ],
-arborioRice : [ arborioRice, cereal, rice, isProducedIn Italy ],
-basmatiRice : [ basmatiRice, cereal, rice, isProducedIn Pakistan ],
-thaiRice : [ thaiRice, cereal, rice, isProducedIn Thailand ],
-Italy : [ Italy, Europe, country ],
-France : [ France, Europe, country ],
-Thailand : [ Thailand, Asia, country, eatLotOf khaoManKai ],
-Pakistan : [ Pakistan, Asia, country, eatLotOf biryani ]
-"""
 
-# Parser le fichier de la famille royale britannique
-family_entities = parse_file(file_content_family)
-print("Family Entities:")
-for key, value in family_entities.root.items():
-    print(key, value)
-
-# Parser le fichier des plats et céréales
-food_entities = parse_file(file_content_food)
-print("\nFood Entities:")
-for key, value in food_entities.root.items():
-    print(key, value)
+if __name__ == "__main__":
+    # Vérifiez que des arguments ont été passés
+    if len(sys.argv) > 1:
+        # Le premier argument est à l'index 1 (sys.argv[0] est le nom du script)
+        filepath = sys.argv[1]
+        main(filepath)
+    else:
+        print("no file passed as input")
