@@ -30,37 +30,33 @@ def computePformat(model):
             return name + " " + stringify(l)
         for obj, rel in rc.incidence.items():
             categories[rc.domain][obj] += list(map(prefixAndStringify, rel))
-    print(categories)
+    return categories
 
-def printCtx(model):
-    print("%", model.name)
+def printPformat(name, categories):
+    print("%", name)
     print(":-")
-    for name, fc in model.formalContexts.root.items():
-        for obj in model.categories.root[fc.domain]:
-            rel = fc.incidence[obj]
+    for name, cat in categories.items():
+        for obj, rel in cat.items():
+            incidence = ""
             if len(rel) == 0:
-                relString = " [ ]"
-                print(obj, ":", relString, ",")
-            elif len(rel) == 1:
-                relString= "[ " + rel[0] + " ]"
-                print(obj, ":", relString, ",")
+                incidence = "[ ]"
             else:
-                relString= "[ " + rel[0]
-                for attr in rel[1:]:
-                    relString += (", " + attr)
-                relString += " ]"
-                print(obj, ":", relString, ",")
-    for name, rc in model.relationalContexts.root.items():
-        for obj in model.categories.root[rc.domain]:
-            print(obj, ":")
+                incidence = "[ " + rel[0] 
+                for item in rel[1:]:
+                    incidence += ", " + item
+                incidence += " ]"
+            if name == list(categories)[-1] and obj == list(cat)[-1]:
+                print(obj, ":", incidence)
+            else:
+                print(obj, ":", incidence, ",")
     print(".")
 
 
 def main(filepath):
     with open(filepath, 'r') as file:
         data = unicontext.DataModel.model_validate_json(file.read())
-        computePformat(data)
-
+        categories = computePformat(data)
+        printPformat(data.name, categories)
 
 if __name__ == "__main__":
     # Vérifiez que des arguments ont été passés
