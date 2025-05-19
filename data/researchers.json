@@ -17,7 +17,7 @@
             }
         }, 
         "field" : {
-            "domain" : "paper",
+            "domain" : "papers",
             "attributes" : ["Machine Learning", "Data Mining", "Linguistics", "Biology"],
             "incidence" : {
                 "paperA" : ["Machine Learning", "Linguistics"],
