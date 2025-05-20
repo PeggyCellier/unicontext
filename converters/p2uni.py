@@ -1,6 +1,7 @@
 import sys
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
+import unicontext as unicontext
 
 class Entity(BaseModel):
     attributes: List[List[str]] = Field(default_factory=list)
@@ -48,15 +49,36 @@ def parse_file(file_content):
             entity = getEntity(name)
             for detail in details:
                 appendDetail(name, entity, detail)
-
-
     return ent
+
+def computeUni(entities):
+    category = []
+    attributes = []
+    incidenceAttr = {}
+    for obj, entity in entities.root.items():
+        category.append(obj)
+        incidenceAttr[obj] = []
+        for item in entity.attributes:
+            if len(item) == 1:
+                if not item[0] in attributes:
+                    attributes.append(item[0])
+                if not item[0] in incidenceAttr[obj] :
+                    incidenceAttr[obj].append(item[0])
+    categories = unicontext.Categories(root={"objects":category})
+    fc = unicontext.FormalContext(domain="objects", attributes=attributes, incidence=incidenceAttr)
+    fcs = unicontext.FormalContexts(root={"formalContext":fc})
+    model = unicontext.DataModel(name="context", categories=categories, formalContexts=fcs)
+    unicontext.printUniContext(model)
+
+def printEntities(entities):
+    for obj, relations in entities.root.items():
+        print(obj, relations)
 
 def main(filepath):
     with open(filepath, 'r') as file:
         entities = parse_file(file.read())
-        for key, value in entities.root.items():
-            print(key, value)
+        #printEntities(entities)
+        computeUni(entities)
 
 
 if __name__ == "__main__":
