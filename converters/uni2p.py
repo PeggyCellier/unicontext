@@ -37,14 +37,10 @@ def printPformat(name, categories):
     print(":-")
     for name, cat in categories.items():
         for obj, rel in cat.items():
-            incidence = ""
-            if len(rel) == 0:
-                incidence = "[ ]"
-            else:
-                incidence = "[ " + rel[0] 
-                for item in rel[1:]:
-                    incidence += ", " + item
-                incidence += " ]"
+            incidence = "[ " + name 
+            for item in rel:
+                incidence += ", " + item
+            incidence += " ]"
             if name == list(categories)[-1] and obj == list(cat)[-1]:
                 print(obj, ":", incidence)
             else:
