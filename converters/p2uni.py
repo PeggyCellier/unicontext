@@ -15,7 +15,7 @@ def parse_file(file_content):
 
     for line in lines:
         line = line.strip()
-        if line.startswith('%') or line == ':-':
+        if line.startswith('%') or line == ':-' or line.startswith('.'):
             continue
 
         name, details = line.split(':')
@@ -51,10 +51,20 @@ def parse_file(file_content):
                 appendDetail(name, entity, detail)
     return ent
 
+def incidenceLength(incidence):
+    key = next(iter(incidence))
+    example_relation = incidence[key]
+    rel = example_relation[0]
+    if isinstance(rel, str):
+        return 1
+    else : #rel is a list
+        return len(rel)
+
 def computeUni(entities):
     category = []
     attributes = []
     incidenceAttr = {}
+    incidenceObj = {}
     for obj, entity in entities.root.items():
         category.append(obj)
         incidenceAttr[obj] = []
@@ -64,11 +74,32 @@ def computeUni(entities):
                     attributes.append(item[0])
                 if not item[0] in incidenceAttr[obj] :
                     incidenceAttr[obj].append(item[0])
+            elif len(item) == 2:
+                if not item[0] in incidenceObj.keys():
+                    incidenceObj[item[0]] = {}
+                if not obj in incidenceObj[item[0]].keys():
+                    incidenceObj[item[0]][obj] = []
+                incidenceObj[item[0]][obj].append(item[1])
+            else : #len(item) >= 3
+                if not item[0] in incidenceObj.keys():
+                    incidenceObj[item[0]] = {}
+                if not obj in incidenceObj[item[0]].keys():
+                    incidenceObj[item[0]][obj] = []
+                incidenceObj[item[0]][obj].append(item[1:])
     categories = unicontext.Categories(root={"objects":category})
     fc = unicontext.FormalContext(domain="objects", attributes=attributes, incidence=incidenceAttr)
     fcs = unicontext.FormalContexts(root={"formalContext":fc})
-    model = unicontext.DataModel(name="context", categories=categories, formalContexts=fcs)
-    unicontext.printUniContext(model)
+    rcs_dict = {}
+    for key, value in incidenceObj.items():
+        length = incidenceLength(value)
+        if length == 1:
+            rcs_dict[key] = unicontext.RelationalContext(domain="objects", range="objects", incidence=value)
+        else : #length >= 2
+            range = ["objects"] * length
+            rcs_dict[key] = unicontext.RelationalContext(domain="objects", range=range, incidence=value)
+    rcs = unicontext.RelationalContexts(root=rcs_dict)
+    model = unicontext.DataModel(name="context", categories=categories, formalContexts=fcs, relationalContexts=rcs)
+    return model
 
 def printEntities(entities):
     for obj, relations in entities.root.items():
@@ -78,7 +109,8 @@ def main(filepath):
     with open(filepath, 'r') as file:
         entities = parse_file(file.read())
         #printEntities(entities)
-        computeUni(entities)
+        model = computeUni(entities)
+        unicontext.printUniContext(model)
 
 
 if __name__ == "__main__":

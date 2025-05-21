@@ -8,8 +8,8 @@ Bordeaux : [ places ] ,
 Lille : [ places ] ,
 Strasbourg : [ places ] ,
 Rennes : [ places ] ,
-paperA : [ papers, Machine Learning, Linguistics ] ,
-paperB : [ papers, Data Mining, Biology ] ,
-paperC : [ papers, Machine Learning, Biology ] ,
+paperA : [ papers, MachineLearning, Linguistics ] ,
+paperB : [ papers, DataMining, Biology ] ,
+paperC : [ papers, MachineLearning, Biology ] ,
 paperD : [ papers, Linguistics ]
 .
