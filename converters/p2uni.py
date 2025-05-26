@@ -37,7 +37,10 @@ def parse_file(file_content):
                     for v in values :
                         entity.attributes.append([pred, v.strip()])
                 else:
-                    entity.attributes.append([pred, value])
+                    if ' ' in value:
+                        entity.attributes.append([pred] + value.split(' '))
+                    else:
+                        entity.attributes.append([pred, value])
             else:
                 entity.attributes.append([detail])
             ent.root[name] = entity
