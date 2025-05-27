@@ -9,6 +9,39 @@ class Entity(BaseModel):
 class Entities(BaseModel):
     root: Dict[str, Entity] = Field(default_factory=dict)
 
+def validate_oneRule(file_content):
+    def rule_search(string, substring):
+        occurrences = []
+        index = 0
+        while True:
+            index = string.find(substring, index)
+            if index == -1:
+                break
+            occurrences.append(index)
+            index += 1 
+        return occurrences
+    occurences = rule_search(file_content, ":-")
+    if len(occurences) != 1 :
+        print("file should contain one rule exactly")
+        raise "file should contain one rule exactly"
+    
+def validate_noHead(file_content):
+    head, body = file_content.split(":-")
+    lines = head.strip().split('\n')
+    for line in lines :
+        if line.startswith('%') or line == "":
+            continue
+        else:
+            print("rule should not have head")
+            raise "rule should not have head"
+
+""" def validate_wellFormated(file_content):
+    lines = file_content.strip().split('\n')
+    for line in lines:
+        line = line.strip()
+        if line.startswith('%') or line == ':-' or line == ('.'):
+            continue """
+
 def parse_file(file_content):
     lines = file_content.strip().split('\n')
     ent = Entities()
@@ -110,7 +143,14 @@ def printEntities(entities):
 
 def main(filepath):
     with open(filepath, 'r') as file:
-        entities = parse_file(file.read())
+        content = file.read()
+        try:
+            validate_oneRule(content)
+            validate_noHead(content)
+        except:
+            print("file has incorrect format")
+            return
+        entities = parse_file(content)
         #printEntities(entities)
         model = computeUni(entities)
         unicontext.printUniContext(model)

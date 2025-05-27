@@ -215,6 +215,8 @@ the scripts need python 3 and the library pydantic to be executed
 
 ## Tests
 
+### .cxt files
+
 To convert a .cxt file to the Unicontext format, use the command line, as an example :
 
     python converters/cxt2uni.py data/liveinwater.cxt
@@ -222,3 +224,23 @@ To convert a .cxt file to the Unicontext format, use the command line, as an exa
 To convert a Unicontext file to the .cxt format, use the command line, as an example :
 
     python converters/uni2cxt.py data/liveinwater.json
+
+### .rcft files
+
+To convert a .rcft file to the Unicontext format, use the command line, as an example :
+
+    python converters/rcft2uni.py data/social_relation.rcft
+
+To convert a Unicontext file to the .rcft format, use the command line, as an example :
+
+    python converters/uni2cxt.py data/social_relation.json
+
+### .p files
+
+To convert a .p file to the Unicontext format, use the command line, as an example :
+
+    python converters/p2uni.py data/royals.p
+
+To convert a Unicontext file to the .p format, use the command line, as an example :
+
+    python converters/uni2p.py data/royal.json
