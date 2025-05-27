@@ -1,4 +1,5 @@
 import sys
+import re
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
 import unicontext as unicontext
@@ -35,12 +36,19 @@ def validate_noHead(file_content):
             print("rule should not have head")
             raise "rule should not have head"
 
-""" def validate_wellFormated(file_content):
-    lines = file_content.strip().split('\n')
+def validate_wellFormated(file_content):
+    head, body = file_content.split(":-")
+    lines = body.strip().split('\n')
     for line in lines:
+        if line == ".":
+            return
         line = line.strip()
-        if line.startswith('%') or line == ':-' or line == ('.'):
-            continue """
+        name, details = line.split(':')
+        pattern = r'\[\s*([\w\s,]+)\s*,?\s*\]'
+        match = re.match(pattern, details.strip())
+        if not match:
+            print("details are not well formatted")
+            raise "details are not well formatted"
 
 def parse_file(file_content):
     lines = file_content.strip().split('\n')
@@ -147,13 +155,15 @@ def main(filepath):
         try:
             validate_oneRule(content)
             validate_noHead(content)
-        except:
+            validate_wellFormated(content)
+        except Exception as e:
+            print(e.message, e.args)
             print("file has incorrect format")
             return
         entities = parse_file(content)
         #printEntities(entities)
         model = computeUni(entities)
-        unicontext.printUniContext(model)
+        unicontext.printJson(model)
 
 
 if __name__ == "__main__":
