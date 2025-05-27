@@ -237,6 +237,13 @@ To convert a Unicontext file to the .rcft format, use the command line, as an ex
 
 ### .p files
 
+#### well formated .p files
+
+The converter p2uni accepts only a subset of the .p grammar. To be converted, the .p file needs :
+- only have one rule
+- the rule should have no head
+- the patterns of the rules should have only one object as argument and the description block should be a list of comma separated values
+
 To convert a .p file to the Unicontext format, use the command line, as an example :
 
     python converters/p2uni.py data/royals.p
