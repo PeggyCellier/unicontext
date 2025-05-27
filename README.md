@@ -244,6 +244,13 @@ The converter p2uni accepts only a subset of the .p grammar. To be converted, th
 - the rule should have no head
 - the patterns of the rules should have only one object as argument and the description block should be a list of comma separated values
 
+Examples of not well formatted .p file :
+
+| file | reason |
+| -----|--------|
+| data/edge_cases_p/royal_ruleHead.p | the rule has head |
+| data/edge_cases_p/royal_twoRules.p | there are two rules |
+
 To convert a .p file to the Unicontext format, use the command line, as an example :
 
     python converters/p2uni.py data/royals.p
