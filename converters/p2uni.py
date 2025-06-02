@@ -119,8 +119,7 @@ def computeCategories(catMapping):
         categories[cat].append(obj)
     return categories
 
-def computeFCs(entities, catMapping):
-    categories = computeCategories(catMapping)
+def computeFCs(entities, catMapping, categories):
     headerAttr = {}
     incidenceAttr = {}
     for cat in categories.keys():
@@ -152,43 +151,51 @@ def incidenceLength(incidence):
     else : #rel is a list
         return len(rel)
 
-def computeUni(entities, catMapping):
-    categories = computeCategories(catMapping)
-    attributes = []
-    incidenceAttr = {}
+def getIncidenceDomain(incidence, catMapping):
+    key = next(iter(incidence))
+    return catMapping[key]
+
+def getIncidenceRange(incidence, catMapping):
+    def catMap(obj):
+        return catMapping[obj]
+    key = next(iter(incidence))
+    example_relation = incidence[key]
+    rel = example_relation[0]
+    if isinstance(rel, str):
+        return catMapping[rel]
+    else : #rel is a list
+        return list(map(catMap, rel))
+
+def computeRCs(entities, catMapping, categories):
     incidenceObj = {}
     for obj, entity in entities.root.items():
-        incidenceAttr[obj] = []
         for item in entity.relations:
-            if len(item) == 1:
-                if not item[0] in attributes:
-                    attributes.append(item[0])
-                if not item[0] in incidenceAttr[obj] :
-                    incidenceAttr[obj].append(item[0])
-            elif len(item) == 2:
+            if len(item) == 2:
                 if not item[0] in incidenceObj.keys():
                     incidenceObj[item[0]] = {}
                 if not obj in incidenceObj[item[0]].keys():
                     incidenceObj[item[0]][obj] = []
                 incidenceObj[item[0]][obj].append(item[1])
-            else : #len(item) >= 3
+            if len(item) >= 3 :
                 if not item[0] in incidenceObj.keys():
                     incidenceObj[item[0]] = {}
                 if not obj in incidenceObj[item[0]].keys():
                     incidenceObj[item[0]][obj] = []
                 incidenceObj[item[0]][obj].append(item[1:])
-    categories = unicontext.Categories(root=categories)
-    fcs = computeFCs(entities, catMapping)
     rcs_dict = {}
     for key, value in incidenceObj.items():
-        length = incidenceLength(value)
-        if length == 1:
-            rcs_dict[key] = unicontext.RelationalContext(domain="objects", range="objects", incidence=value)
-        else : #length >= 2
-            range = ["objects"] * length
-            rcs_dict[key] = unicontext.RelationalContext(domain="objects", range=range, incidence=value)
+        domain = getIncidenceDomain(value, catMapping)
+        range = getIncidenceRange(value, catMapping)
+        rcs_dict[key] = unicontext.RelationalContext(domain=domain, range=range, incidence=value)
     rcs = unicontext.RelationalContexts(root=rcs_dict)
-    model = unicontext.DataModel(name="context", categories=categories, formalContexts=fcs, relationalContexts=rcs)
+    return rcs
+
+def computeUni(entities, catMapping):
+    categories = computeCategories(catMapping)
+    fcs = computeFCs(entities, catMapping, categories)
+    rcs = computeRCs(entities, catMapping, categories)
+    cats = unicontext.Categories(root=categories)
+    model = unicontext.DataModel(name="context", categories=cats, formalContexts=fcs, relationalContexts=rcs)
     return model
 
 def printEntities(entities):
