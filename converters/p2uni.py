@@ -23,8 +23,7 @@ def validate_oneRule(file_content):
         return occurrences
     occurences = rule_search(file_content, ":-")
     if len(occurences) != 1 :
-        print("file should contain one rule exactly")
-        raise "file should contain one rule exactly"
+        raise BaseException("file should contain one rule exactly")
     
 def validate_noHead(file_content):
     head, body = file_content.split(":-")
@@ -33,8 +32,7 @@ def validate_noHead(file_content):
         if line.startswith('%') or line == "":
             continue
         else:
-            print("rule should not have head")
-            raise "rule should not have head"
+            raise BaseException("rule should not have head")
 
 def validate_wellFormated(file_content):
     head, body = file_content.split(":-")
@@ -47,8 +45,7 @@ def validate_wellFormated(file_content):
         pattern = r'\[\s*([\w\s,]+)\s*,?\s*\]'
         match = re.match(pattern, details.strip())
         if not match:
-            print("details are not well formatted")
-            raise "details are not well formatted"
+            raise BaseException("details are not well formatted")
 
 def parse_file(file_content):
     lines = file_content.strip().split('\n')
@@ -226,8 +223,8 @@ def main(filepath, computeCategories):
             #print(catMapping)
             model = computeUni(entities, catMapping)
             unicontext.printJson(model)
-        except Exception as e:
-            print(e.message, e.args)
+        except BaseException as e:
+            print(e)
             print("file has incorrect format")
             return
 
