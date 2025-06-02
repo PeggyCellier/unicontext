@@ -5,7 +5,7 @@ from typing import List, Dict, Any, Optional
 import unicontext as unicontext
 
 class Entity(BaseModel):
-    attributes: List[List[str]] = Field(default_factory=list)
+    relations: List[List[str]] = Field(default_factory=list)
 
 class Entities(BaseModel):
     root: Dict[str, Entity] = Field(default_factory=dict)
@@ -76,14 +76,14 @@ def parse_file(file_content):
                 if '&' in value:
                     values = value.split('&')
                     for v in values :
-                        entity.attributes.append([pred, v.strip()])
+                        entity.relations.append([pred, v.strip()])
                 else:
                     if ' ' in value:
-                        entity.attributes.append([pred] + value.split(' '))
+                        entity.relations.append([pred] + value.split(' '))
                     else:
-                        entity.attributes.append([pred, value])
+                        entity.relations.append([pred, value])
             else:
-                entity.attributes.append([detail])
+                entity.relations.append([detail])
             ent.root[name] = entity
 
         def getEntity(name):
@@ -95,6 +95,54 @@ def parse_file(file_content):
                 appendDetail(name, entity, detail)
     return ent
 
+def computeCategoryMapping(entities):
+    catMapping = {}
+    for obj, entity in entities.root.items():
+        fstRel = entity.relations[0]
+        if len(fstRel) != 1:
+            raise "first relation of object should be its category"
+        else:
+            catMapping[obj] = fstRel[0]
+    return catMapping
+
+def computeDumbCategoryMapping(entities):
+    catMapping = {}
+    for obj, entity in entities.root.items():
+        catMapping[obj] = "objects"
+    return catMapping
+
+def computeCategories(catMapping):
+    categories = {}
+    for obj, cat in catMapping.items():
+        if not cat in categories.keys():
+            categories[cat] = []
+        categories[cat].append(obj)
+    return categories
+
+def computeFCs(entities, catMapping):
+    categories = computeCategories(catMapping)
+    headerAttr = {}
+    incidenceAttr = {}
+    for cat in categories.keys():
+        incidenceAttr[cat] = {}
+        headerAttr[cat] = []
+    for obj, entity in entities.root.items():
+        cat = catMapping[obj]
+        for item in entity.relations:
+            if len(item) == 1:
+                if not item[0] in headerAttr[cat]:
+                    headerAttr[cat].append(item[0])
+                if not obj in incidenceAttr[cat].keys():
+                    incidenceAttr[cat][obj] = []
+                if not item[0] in incidenceAttr[cat][obj] :
+                    incidenceAttr[cat][obj].append(item[0])
+    fc_dict = {}
+    for name, incidence in incidenceAttr.items():
+        fc = unicontext.FormalContext(domain="objects", attributes=headerAttr[name], incidence=incidence)
+        fc_dict[name] = fc
+    fcs = unicontext.FormalContexts(root=fc_dict)
+    return fcs
+
 def incidenceLength(incidence):
     key = next(iter(incidence))
     example_relation = incidence[key]
@@ -104,15 +152,14 @@ def incidenceLength(incidence):
     else : #rel is a list
         return len(rel)
 
-def computeUni(entities):
-    category = []
+def computeUni(entities, catMapping):
+    categories = computeCategories(catMapping)
     attributes = []
     incidenceAttr = {}
     incidenceObj = {}
     for obj, entity in entities.root.items():
-        category.append(obj)
         incidenceAttr[obj] = []
-        for item in entity.attributes:
+        for item in entity.relations:
             if len(item) == 1:
                 if not item[0] in attributes:
                     attributes.append(item[0])
@@ -130,9 +177,8 @@ def computeUni(entities):
                 if not obj in incidenceObj[item[0]].keys():
                     incidenceObj[item[0]][obj] = []
                 incidenceObj[item[0]][obj].append(item[1:])
-    categories = unicontext.Categories(root={"objects":category})
-    fc = unicontext.FormalContext(domain="objects", attributes=attributes, incidence=incidenceAttr)
-    fcs = unicontext.FormalContexts(root={"formalContext":fc})
+    categories = unicontext.Categories(root=categories)
+    fcs = computeFCs(entities, catMapping)
     rcs_dict = {}
     for key, value in incidenceObj.items():
         length = incidenceLength(value)
@@ -149,28 +195,37 @@ def printEntities(entities):
     for obj, relations in entities.root.items():
         print(obj, relations)
 
-def main(filepath):
+def main(filepath, computeCategories):
     with open(filepath, 'r') as file:
         content = file.read()
         try:
             validate_oneRule(content)
             validate_noHead(content)
             validate_wellFormated(content)
+            entities = parse_file(content)
+            #printEntities(entities)
+            catMapping = {}
+            if computeCategories :
+                catMapping = computeCategoryMapping(entities)
+            else :
+                catMapping = computeDumbCategoryMapping(entities)
+            #print(catMapping)
+            model = computeUni(entities, catMapping)
+            unicontext.printUniContext(model)
         except Exception as e:
             print(e.message, e.args)
             print("file has incorrect format")
             return
-        entities = parse_file(content)
-        #printEntities(entities)
-        model = computeUni(entities)
-        unicontext.printJson(model)
 
 
 if __name__ == "__main__":
     # Vérifiez que des arguments ont été passés
-    if len(sys.argv) > 1:
+    if len(sys.argv) == 2:
         # Le premier argument est à l'index 1 (sys.argv[0] est le nom du script)
         filepath = sys.argv[1]
-        main(filepath)
+        main(filepath, False)
+    elif len(sys.argv) == 3 and sys.argv[1] == "-categories":
+        filepath = sys.argv[2]
+        main(filepath, True)
     else:
-        print("no file passed as input")
+        print("command line arguments not recognized")
