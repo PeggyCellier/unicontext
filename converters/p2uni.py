@@ -119,6 +119,12 @@ def computeCategories(catMapping):
         categories[cat].append(obj)
     return categories
 
+def isFCempty(fc):
+    for obj, attrs in fc.incidence.items():
+        if len(attrs) > 0:
+            return False
+    return True
+
 def computeFCs(entities, catMapping, categories):
     headerAttr = {}
     incidenceAttr = {}
@@ -129,16 +135,17 @@ def computeFCs(entities, catMapping, categories):
         cat = catMapping[obj]
         for item in entity.relations:
             if len(item) == 1:
-                if not item[0] in headerAttr[cat]:
+                if not item[0] in headerAttr[cat] and item[0] != cat:
                     headerAttr[cat].append(item[0])
                 if not obj in incidenceAttr[cat].keys():
                     incidenceAttr[cat][obj] = []
-                if not item[0] in incidenceAttr[cat][obj] :
+                if not item[0] in incidenceAttr[cat][obj] and item[0] != cat :
                     incidenceAttr[cat][obj].append(item[0])
     fc_dict = {}
     for name, incidence in incidenceAttr.items():
-        fc = unicontext.FormalContext(domain="objects", attributes=headerAttr[name], incidence=incidence)
-        fc_dict[name] = fc
+        fc = unicontext.FormalContext(domain=name, attributes=headerAttr[name], incidence=incidence)
+        if not isFCempty(fc):
+            fc_dict[name] = fc
     fcs = unicontext.FormalContexts(root=fc_dict)
     return fcs
 
@@ -218,7 +225,7 @@ def main(filepath, computeCategories):
                 catMapping = computeDumbCategoryMapping(entities)
             #print(catMapping)
             model = computeUni(entities, catMapping)
-            unicontext.printUniContext(model)
+            unicontext.printJson(model)
         except Exception as e:
             print(e.message, e.args)
             print("file has incorrect format")
