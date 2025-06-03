@@ -245,6 +245,7 @@ The converter p2uni accepts only a subset of the .p grammar. To be converted, th
 - the patterns of the rules should have only one object as argument and the description block should be a list of comma separated values
 - there should be only one pattern per line
 - the ":-" and "." statement should be written on a single line with no other statement
+- the objects should appear once in a pattern head
 
 
 Examples of not well formatted .p file :
