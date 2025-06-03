@@ -253,10 +253,15 @@ Examples of not well formatted .p file :
 | -----|--------|
 | data/edge_cases_p/royal_ruleHead.p | the rule has head |
 | data/edge_cases_p/royal_twoRules.p | there are two rules |
+| data/edge_cases_p/royal_ampersand.p | ampersand in pattern details |
 
 To convert a .p file to the Unicontext format, use the command line, as an example :
 
-    python converters/p2uni.py data/royals.p
+    python converters/p2uni.py data/royal.p
+
+To convert a .p file to the Unicontext format while specifying the first relation of an object as its category, use the command line, as an example :
+
+    python converters/p2uni.py -categories data/royal.p
 
 To convert a Unicontext file to the .p format, use the command line, as an example :
 
