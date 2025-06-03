@@ -11,6 +11,7 @@ class Entities(BaseModel):
     root: Dict[str, Entity] = Field(default_factory=dict)
 
 def validate_oneRule(file_content):
+    """ verify that the file contains one rule"""
     def rule_search(string, substring):
         occurrences = []
         index = 0
@@ -26,6 +27,7 @@ def validate_oneRule(file_content):
         raise BaseException("file should contain one rule exactly")
     
 def validate_noHead(file_content):
+    """ verify the rule of the file has no head, e.g. is not a implication"""
     head, body = file_content.split(":-")
     lines = head.strip().split('\n')
     for line in lines :
@@ -35,6 +37,7 @@ def validate_noHead(file_content):
             raise BaseException("rule should not have head")
 
 def validate_wellFormated(file_content):
+    """ verify that the details of patterns are well-formated, meaning a comma-separeted list of list of words"""
     head, body = file_content.split(":-")
     lines = body.strip().split('\n')
     for line in lines:
@@ -48,6 +51,7 @@ def validate_wellFormated(file_content):
             raise BaseException("details are not well formatted")
 
 def parse_file(file_content):
+    """ parse a .p file into a dictionnary of entities containing all relations about objects"""
     lines = file_content.strip().split('\n')
     ent = Entities()
 
@@ -93,6 +97,7 @@ def parse_file(file_content):
     return ent
 
 def computeCategoryMapping(entities):
+    """ compute a category mapping where the category of the objects is their first relation. """
     catMapping = {}
     for obj, entity in entities.root.items():
         fstRel = entity.relations[0]
@@ -103,12 +108,14 @@ def computeCategoryMapping(entities):
     return catMapping
 
 def computeDumbCategoryMapping(entities):
+    """ compute a category mapping where the category of all objects is 'objects'. """
     catMapping = {}
     for obj, entity in entities.root.items():
         catMapping[obj] = "objects"
     return catMapping
 
 def computeCategories(catMapping):
+    """ compute a categories object from the category mapping"""
     categories = {}
     for obj, cat in catMapping.items():
         if not cat in categories.keys():
@@ -117,12 +124,15 @@ def computeCategories(catMapping):
     return categories
 
 def isFCempty(fc):
+    """ return true if all relations of the incidence of a formal context are empty. return false otherwise."""
     for obj, attrs in fc.incidence.items():
         if len(attrs) > 0:
             return False
     return True
 
 def computeFCs(entities, catMapping, categories):
+    """ compute the formal contexts from the entities, the category mapping and the categories.
+    A formal context is discarded if it is empty"""
     headerAttr = {}
     incidenceAttr = {}
     for cat in categories.keys():
@@ -146,20 +156,13 @@ def computeFCs(entities, catMapping, categories):
     fcs = unicontext.FormalContexts(root=fc_dict)
     return fcs
 
-def incidenceLength(incidence):
-    key = next(iter(incidence))
-    example_relation = incidence[key]
-    rel = example_relation[0]
-    if isinstance(rel, str):
-        return 1
-    else : #rel is a list
-        return len(rel)
-
 def getIncidenceDomain(incidence, catMapping):
+    """compute the domain of a relational or formal context from its incidence"""
     key = next(iter(incidence))
     return catMapping[key]
 
 def getIncidenceRange(incidence, catMapping):
+    """ compute the range of a relational context from its incidence and the category mapping"""
     def catMap(obj):
         return catMapping[obj]
     key = next(iter(incidence))
@@ -171,6 +174,7 @@ def getIncidenceRange(incidence, catMapping):
         return list(map(catMap, rel))
 
 def computeRCs(entities, catMapping, categories):
+    """ compute the relational contexts from the entities and the category mapping"""
     incidenceObj = {}
     for obj, entity in entities.root.items():
         for item in entity.relations:
@@ -195,6 +199,7 @@ def computeRCs(entities, catMapping, categories):
     return rcs
 
 def computeUni(entities, catMapping):
+    """ compute the unicontext model from the result produced by specialized functions"""
     categories = computeCategories(catMapping)
     fcs = computeFCs(entities, catMapping, categories)
     rcs = computeRCs(entities, catMapping, categories)
@@ -203,10 +208,17 @@ def computeUni(entities, catMapping):
     return model
 
 def printEntities(entities):
+    """ print the entities produced by the parse_file function"""
     for obj, relations in entities.root.items():
         print(obj, relations)
 
 def main(filepath, computeCategories):
+    """main function
+    First, validate file with dedicated function.
+    Second, parse the file into entities corresponding to objects along their relation.
+    Third, compute the mapping between object and categories.
+    Last, compute the pydantic model for the unicontext format and print it.
+    """
     with open(filepath, 'r') as file:
         content = file.read()
         try:
