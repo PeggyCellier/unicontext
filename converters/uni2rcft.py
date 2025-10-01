@@ -1,5 +1,14 @@
+import os
 import sys
 import unicontext as unicontext
+
+output = ""
+def printInOutput(*text):
+    global output
+    for t in text :
+        output += t + " "
+    output += "\n"
+
 
 class WrappedFC:
     def __init__(self, name, fc):
@@ -7,13 +16,13 @@ class WrappedFC:
         self.fc = fc
 
 def printFormalContext(name, ctx):
-    print("FormalContext", name)
-    print("algo fca")
+    printInOutput("FormalContext", name)
+    printInOutput("algo fca")
     header= "||"
     for a in ctx.attributes:
         header+=a
         header+="|"
-    print(header)
+    printInOutput(header)
     for obj, rel in ctx.incidence.items():
         line = "|" + obj + "|"
         for a in ctx.attributes:
@@ -21,18 +30,18 @@ def printFormalContext(name, ctx):
                 line+= "x|"
             else:
                 line+= "|"
-        print(line)
+        printInOutput(line)
 
 def printRelContext(name, ctx, source, target):
-    print("RelationalContext", name)
-    print("source", ctx.domain)
-    print("target", ctx.range)
-    print("scaling exist")
+    printInOutput("RelationalContext", name)
+    printInOutput("source", ctx.domain)
+    printInOutput("target", ctx.range)
+    printInOutput("scaling exist")
     header= "||"
     for o in target:
         header+=o
         header+="|"
-    print(header)
+    printInOutput(header)
     for obj in source:
         if obj in ctx.incidence.keys():
             rel = ctx.incidence[obj]
@@ -42,12 +51,12 @@ def printRelContext(name, ctx, source, target):
                     line+= "x|"
                 else:
                     line+= "|"
-            print(line)
+            printInOutput(line)
         else:
             line = "|" + obj + "|"
             for t in target:
                 line+= "|"
-            print(line)
+            printInOutput(line)
 
 
 
@@ -95,10 +104,10 @@ def printCtx(model):
                             incidence[obj].append(prefix(a))
             ctx = unicontext.FormalContext(domain=name, attributes=attr, incidence=incidence)
             printFormalContext(name, ctx)
-        print("")
+        printInOutput("")
     for name, ctx in model.relationalContexts.root.items():
         printRelContext(name, ctx, model.categories.root[ctx.domain], model.categories.root[ctx.range])
-        print("")
+        printInOutput("")
 
 def validateModel(model):
     for name, ctx in model.relationalContexts.root.items():
@@ -114,6 +123,13 @@ def main(filepath):
         data = unicontext.DataModel.model_validate_json(file.read())
         if validateModel(data):
             printCtx(data)
+            basefilepath, file_extension = os.path.splitext(filepath)
+            if file_extension != ".json":
+                print("input file should be encoded as JSON")
+                return
+            outputfilepath = basefilepath + ".rcft"
+            with open(outputfilepath, "w") as f:
+                f.write(output)
         else:
             print("json context not accepted")
         

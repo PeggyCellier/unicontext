@@ -1,5 +1,13 @@
+import os
 import sys
 import unicontext as unicontext
+
+output = ""
+def printInOutput(*text):
+    global output
+    for t in text :
+        output += t + " "
+    output += "\n"
 
 def stringify(l):
     if isinstance(l, str):
@@ -33,8 +41,8 @@ def computePformat(model):
     return categories
 
 def printPformat(name, categories):
-    print("%", name)
-    print(":-")
+    printInOutput("%", name)
+    printInOutput(":-")
     for name, cat in categories.items():
         for obj, rel in cat.items():
             incidence = "[ " + name 
@@ -42,10 +50,10 @@ def printPformat(name, categories):
                 incidence += ", " + item
             incidence += " ]"
             if name == list(categories)[-1] and obj == list(cat)[-1]:
-                print(obj, ":", incidence)
+                printInOutput(obj, ":", incidence)
             else:
-                print(obj, ":", incidence, ",")
-    print(".")
+                printInOutput(obj, ":", incidence, ",")
+    printInOutput(".")
 
 
 def main(filepath):
@@ -53,6 +61,13 @@ def main(filepath):
         data = unicontext.DataModel.model_validate_json(file.read())
         categories = computePformat(data)
         printPformat(data.name, categories)
+        basefilepath, file_extension = os.path.splitext(filepath)
+        if file_extension != ".json":
+            print("input file should be encoded as JSON")
+            return
+        outputfilepath = basefilepath + ".p"
+        with open(outputfilepath, "w") as f:
+            f.write(output)
 
 if __name__ == "__main__":
     # Vérifiez que des arguments ont été passés
