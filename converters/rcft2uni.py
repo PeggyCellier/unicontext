@@ -1,3 +1,4 @@
+import os
 import sys
 import unicontext as unicontext
 
@@ -93,7 +94,12 @@ def main(filepath):
         fcs = read_formal_contexts(data)
         rcs = read_relational_contexts(data)
         context = unicontext.DataModel(name="context", categories=cat, formalContexts=fcs, relationalContexts=rcs)
-        unicontext.printJson(context)
+        basefilepath, file_extension = os.path.splitext(filepath)
+        if file_extension != ".rcft":
+            print("input file should be encoded as RCFT")
+            return
+        outputfilepath = basefilepath + ".json"
+        unicontext.printInFile(context, outputfilepath)
 
 if __name__ == "__main__":
     # Vérifiez que des arguments ont été passés

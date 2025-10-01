@@ -50,3 +50,7 @@ def printUniContext(rootcontext):
 
 def printJson(model):
     print(model.model_dump_json(indent=2))
+
+def printInFile(model, filepath):
+    with open(filepath, "w") as f:
+            f.write(model.model_dump_json(indent=2))

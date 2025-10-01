@@ -1,3 +1,4 @@
+import os
 import sys
 import re
 from pydantic import BaseModel, Field
@@ -234,7 +235,13 @@ def main(filepath, computeCategories):
                 catMapping = computeDumbCategoryMapping(entities)
             #print(catMapping)
             model = computeUni(entities, catMapping)
-            unicontext.printJson(model)
+
+            basefilepath, file_extension = os.path.splitext(filepath)
+            if file_extension != ".p":
+                print("input file should be encoded as .p file")
+                return
+            outputfilepath = basefilepath + ".json"
+            unicontext.printInFile(model, outputfilepath)
         except BaseException as e:
             print(e)
             print("file has incorrect format")

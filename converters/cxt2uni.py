@@ -1,3 +1,4 @@
+import os
 import sys
 import unicontext as unicontext
 
@@ -5,7 +6,7 @@ def parse_input(input_data):
     lines = input_data.strip().split('\n')
 
     # Vérifier que la première ligne est 'B'
-    if lines[0] != 'B':
+    if lines[0][0] != 'B':
         raise ValueError("L'entrée doit commencer par la lettre 'B'.")
 
     # Lire le nombre d'objets et le nombre d'attributs
@@ -14,9 +15,11 @@ def parse_input(input_data):
 
     # Lire la liste des objets
     objects = lines[5:5 + num_objects]
+    objects = [valeur.strip() for valeur in objects]
 
     # Lire la liste des attributs
     attributes = lines[5 + num_objects:5 + num_objects + num_attributes]
+    attributes = [valeur.strip() for valeur in attributes]
 
     # Lire le tableau des relations entre objets et attributs
     relations = lines[5 + num_objects + num_attributes:]
@@ -44,8 +47,13 @@ def parse_input(input_data):
 
 def main(filepath):
     with open(filepath, 'r') as file:
+        basefilepath, file_extension = os.path.splitext(filepath)
+        if file_extension != ".cxt":
+            print("input file should be encoded as CXT")
+            return
+        outputfilepath = basefilepath + ".json"
         parsed_data = parse_input(file.read())
-        unicontext.printJson(parsed_data)
+        unicontext.printInFile(parsed_data, outputfilepath)
 
 
 if __name__ == "__main__":
