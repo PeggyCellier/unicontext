@@ -25,6 +25,7 @@ if __name__ == "__main__":
     elif file_extension == ".p":
         p2uni.main(filepath, categories)
     else :
-        print("file extension not recognized")
+        print("file extension not recognized : ", file_extension)
+        exit(1)
 
     

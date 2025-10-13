@@ -1,6 +1,7 @@
 import os
 import sys
 import re
+import traceback
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
 import unicontext as unicontext
@@ -58,7 +59,7 @@ def parse_file(file_content):
 
     for line in lines:
         line = line.strip()
-        if line.startswith('%') or line == ':-' or line.startswith('.'):
+        if line.startswith('%') or line == ':-' or line.startswith('.') or line == '':
             continue
 
         name, details = line.split(':')
@@ -243,9 +244,9 @@ def main(filepath, computeCategories):
             outputfilepath = basefilepath + ".json"
             unicontext.printInFile(model, outputfilepath)
         except BaseException as e:
-            print(e)
+            print(traceback.format_exc())
             print("file has incorrect format")
-            return
+            exit(1)
 
 
 if __name__ == "__main__":
