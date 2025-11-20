@@ -9,19 +9,22 @@ def printInOutput(*text):
         output += t + " "
     output += "\n"
 
+def slugify(s):
+    return s.replace(" ", "_")
+
 def stringify(l):
     if isinstance(l, str):
-        return l
+        return slugify(l)
     elif isinstance(l, list):
         s=""
         if len(l) == 0:
             return s
         elif len(l) == 1:
-            return l[0]
+            return slugify(l[0])
         else:
-            s += l[0]
+            s += slugify(l[0])
             for item in l[1:]:
-                s+= (" " + item)
+                s+= (" " + slugify(item))
             return s
     else:
         print("unrecognized incidence")
@@ -32,7 +35,7 @@ def computePformat(model):
         categories[name] = {element: [] for element in c}
     for name, fc in model.formalContexts.root.items():
         for obj, attr in fc.incidence.items():
-            categories[fc.domain][obj] += attr
+            categories[fc.domain][obj] += list(map(slugify,attr))
     for name, rc in model.relationalContexts.root.items():
         def prefixAndStringify(l):
             return name + " " + stringify(l)
